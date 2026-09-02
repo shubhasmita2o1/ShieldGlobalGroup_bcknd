@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/hero")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class HeroController {
 
     private final HeroSlideService heroSlideService;

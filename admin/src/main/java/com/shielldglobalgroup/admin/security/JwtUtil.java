@@ -5,52 +5,50 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-   
+
     @Value("${jwt.secret}")
     private String secret;
 
-    private final long EXPIRATION_MS = 1000 * 60 * 60 * 8; // 8 hours
+    @Value("${jwt.expiration-ms:28800000}")
+    private long expirationMs;
 
-    // Get signing key from secret string
     private Key getKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Generate token after successful login
     public String generateToken(String username) {
         return Jwts.builder()
-            .setSubject(username)
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
-            .signWith(getKey(), SignatureAlgorithm.HS256)
-            .compact();
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    // Extract username from token
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(getKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
-    // Check if token is valid and not expired
     public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token);
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-    } 
+    }
 }

@@ -30,7 +30,7 @@ public class ContactService {
     // Mark a message as read
     public ContactMessage markAsRead(Long id) {
         ContactMessage msg = contactRepo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Message not found: " + id));
+            .orElseThrow(() -> new com.shielldglobalgroup.admin.exception.ResourceNotFoundException("Message", id));
         msg.setIsRead(true);
         return contactRepo.save(msg);
     }

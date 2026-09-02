@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/map")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class MapController {
 
     private final MapPinService mapPinService;

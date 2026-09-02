@@ -13,7 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin/content")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class AdminContentController {
 
     private final ContentService contentService;

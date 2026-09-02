@@ -20,7 +20,7 @@ public class HeroSlideService {
     // Get one slide by order number
     public HeroSlide getSlide(Integer slideOrder) {
         return heroRepo.findBySlideOrder(slideOrder)
-            .orElseThrow(() -> new RuntimeException("Slide not found: " + slideOrder));
+            .orElseThrow(() -> new com.shielldglobalgroup.admin.exception.ResourceNotFoundException("Slide", slideOrder));
     }
 
     // Save or update a slide
