@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 @Component
 public class ContentMapper {
 
-    // ContentBlock Entity → DTO
     public ContentBlockDTO toDTO(ContentBlock entity) {
         return new ContentBlockDTO(
             entity.getPageKey(),
@@ -20,7 +19,6 @@ public class ContentMapper {
         );
     }
 
-    // ContentBlock DTO → Entity (used when admin saves)
     public ContentBlock toEntity(ContentBlockDTO dto) {
         ContentBlock entity = new ContentBlock();
         entity.setPageKey(dto.getPageKey());
@@ -30,9 +28,9 @@ public class ContentMapper {
         return entity;
     }
 
-    // ContentListItem Entity → DTO
     public ContentListItemDTO toDTO(ContentListItem entity) {
         return new ContentListItemDTO(
+            entity.getId(),
             entity.getPageKey(),
             entity.getSectionKey(),
             entity.getListType(),
@@ -41,9 +39,9 @@ public class ContentMapper {
         );
     }
 
-    // HeroSlide Entity → DTO
     public HeroSlideDTO toDTO(HeroSlide entity) {
         return new HeroSlideDTO(
+            entity.getId(),
             entity.getSlideOrder(),
             entity.getTitle(),
             entity.getSubtitle(),
@@ -53,9 +51,11 @@ public class ContentMapper {
         );
     }
 
-    // HeroSlide DTO → Entity
     public HeroSlide toEntity(HeroSlideDTO dto) {
         HeroSlide entity = new HeroSlide();
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
+        }
         entity.setSlideOrder(dto.getSlideOrder());
         entity.setTitle(dto.getTitle());
         entity.setSubtitle(dto.getSubtitle());
@@ -65,7 +65,6 @@ public class ContentMapper {
         return entity;
     }
 
-    // MapPin Entity → DTO
     public MapPinDTO toDTO(MapPin entity) {
         return new MapPinDTO(
             entity.getId(),
@@ -75,7 +74,6 @@ public class ContentMapper {
         );
     }
 
-    // MapPin DTO → Entity
     public MapPin toEntity(MapPinDTO dto) {
         MapPin entity = new MapPin();
         entity.setLabel(dto.getLabel());
@@ -84,7 +82,6 @@ public class ContentMapper {
         return entity;
     }
 
-    // ContactMessage Entity → DTO
     public ContactMessageDTO toDTO(ContactMessage entity) {
         return new ContactMessageDTO(
             entity.getId(),
@@ -97,7 +94,6 @@ public class ContentMapper {
         );
     }
 
-    // List conversions — convert whole lists at once
     public List<HeroSlideDTO> toHeroDTOList(List<HeroSlide> entities) {
         return entities.stream().map(this::toDTO).collect(Collectors.toList());
     }
@@ -106,11 +102,11 @@ public class ContentMapper {
         return entities.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-public List<ContactMessageDTO> toMessageDTOList(
-        List<ContactMessage> entities) {
+    public List<ContactMessageDTO> toMessageDTOList(List<ContactMessage> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
 
-    return entities.stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
-}
+    public List<ContentListItemDTO> toContentListItemDTOList(List<ContentListItem> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
 }

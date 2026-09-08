@@ -2,73 +2,87 @@ package com.shielldglobalgroup.admin.controller;
 
 import com.shielldglobalgroup.admin.dto.ApiResponseDTO;
 import com.shielldglobalgroup.admin.dto.ContactMessageDTO;
+import com.shielldglobalgroup.admin.entity.ContactMessage;
 import com.shielldglobalgroup.admin.mapper.ContentMapper;
 import com.shielldglobalgroup.admin.service.ContactService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/messages")
 @RequiredArgsConstructor
-// @CrossOrigin(origins = "*")
 public class AdminMessageController {
 
     private final ContactService contactService;
     private final ContentMapper contentMapper;
 
-    // GET /api/admin/messages
-    // admin inbox — all messages newest first
     @GetMapping
-    public ResponseEntity<ApiResponseDTO<List<ContactMessageDTO>>> getAllMessages() {
+    public ResponseEntity<ApiResponseDTO<Map<String, Object>>> getMessages(
+            @RequestParam(required = false) Boolean isRead,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
 
-        List<ContactMessageDTO> messages = contactService.getAllMessages()
-            .stream()
-            .map(contentMapper::toDTO)
-            .collect(Collectors.toList());
+        Page<ContactMessage> result = contactService.search(isRead, search, page, size);
+        List<ContactMessageDTO> content = contentMapper.toMessageDTOList(result.getContent());
 
-        return ResponseEntity.ok(
-            ApiResponseDTO.ok("Messages loaded", messages)
-        );
+        Map<String, Object> data = new HashMap<>();
+        data.put("content", content);
+        data.put("page", result.getNumber());
+        data.put("size", result.getSize());
+        data.put("totalElements", result.getTotalElements());
+        data.put("totalPages", result.getTotalPages());
+
+        return ResponseEntity.ok(ApiResponseDTO.ok("Messages loaded", data));
     }
 
-    // GET /api/admin/messages/unread
+    @GetMapping("/stats")
+    public ResponseEntity<ApiResponseDTO<Map<String, Long>>> stats() {
+        return ResponseEntity.ok(ApiResponseDTO.ok("Message stats", contactService.stats()));
+    }
+
     @GetMapping("/unread")
     public ResponseEntity<ApiResponseDTO<List<ContactMessageDTO>>> getUnread() {
-
-        List<ContactMessageDTO> messages = contactService.getUnreadMessages()
-            .stream()
-            .map(contentMapper::toDTO)
-            .collect(Collectors.toList());
-
-        return ResponseEntity.ok(
-            ApiResponseDTO.ok("Unread messages loaded", messages)
-        );
+        return ResponseEntity.ok(ApiResponseDTO.ok(
+                "Unread messages loaded",
+                contentMapper.toMessageDTOList(contactService.getUnreadMessages())));
     }
 
-    // GET /api/admin/messages/unread/count
-    // used for badge number on admin dashboard
     @GetMapping("/unread/count")
     public ResponseEntity<ApiResponseDTO<Long>> getUnreadCount() {
-        return ResponseEntity.ok(
-            ApiResponseDTO.ok("Unread count", contactService.countUnread())
-        );
+        return ResponseEntity.ok(ApiResponseDTO.ok("Unread count", contactService.countUnread()));
     }
 
-    // PUT /api/admin/messages/{id}/read
-    // admin clicks a message → marks it read
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<ContactMessageDTO>> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponseDTO.ok(
+                "Message loaded",
+                contentMapper.toDTO(contactService.getById(id))));
+    }
+
     @PutMapping("/{id}/read")
-    public ResponseEntity<ApiResponseDTO<ContactMessageDTO>> markAsRead(
-            @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDTO<ContactMessageDTO>> markAsRead(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponseDTO.ok(
+                "Message marked as read",
+                contentMapper.toDTO(contactService.markAsRead(id))));
+    }
 
-        var updated = contactService.markAsRead(id);
-        var dto = contentMapper.toDTO(updated);
+    @PutMapping("/{id}/unread")
+    public ResponseEntity<ApiResponseDTO<ContactMessageDTO>> markAsUnread(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponseDTO.ok(
+                "Message marked as unread",
+                contentMapper.toDTO(contactService.markAsUnread(id))));
+    }
 
-        return ResponseEntity.ok(
-            ApiResponseDTO.ok("Message marked as read", dto)
-        );
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<Void>> delete(@PathVariable Long id) {
+        contactService.delete(id);
+        return ResponseEntity.ok(ApiResponseDTO.ok("Message deleted"));
     }
 }
