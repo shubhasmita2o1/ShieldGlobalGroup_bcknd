@@ -3,11 +3,11 @@ package com.shielldglobalgroup.admin.config;
 import com.shielldglobalgroup.admin.entity.ContentBlock;
 import com.shielldglobalgroup.admin.entity.ContentListItem;
 import com.shielldglobalgroup.admin.entity.HeroSlide;
-import com.shielldglobalgroup.admin.entity.MapPin;
+import com.shielldglobalgroup.admin.entity.MapLocation;
 import com.shielldglobalgroup.admin.repository.ContentBlockRepository;
 import com.shielldglobalgroup.admin.repository.ContentListItemRepository;
 import com.shielldglobalgroup.admin.repository.HeroSlideRepository;
-import com.shielldglobalgroup.admin.repository.MapPinRepository;
+import com.shielldglobalgroup.admin.repository.MapLocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -21,14 +21,14 @@ public class DataInitializer implements CommandLineRunner {
     private final ContentBlockRepository blockRepo;
     private final ContentListItemRepository listRepo;
     private final HeroSlideRepository heroRepo;
-    private final MapPinRepository mapPinRepo;
+    private final MapLocationRepository mapLocationRepo;
 
     @Override
     public void run(String... args) {
         if (blockRepo.count() == 0) seedContentBlocks();
         if (listRepo.count() == 0) seedListItems();
         if (heroRepo.count() == 0) seedHeroSlides();
-        if (mapPinRepo.count() == 0) seedMapPins();
+        if (mapLocationRepo.count() == 0) seedMapLocations();
         System.out.println("✅ Seed data loaded successfully");
     }
 
@@ -694,50 +694,56 @@ public class DataInitializer implements CommandLineRunner {
     // ══════════════════════════════════════════════════════
     // MAP PINS — updated coordinates from latest index.html
     // ══════════════════════════════════════════════════════
-    private void seedMapPins() {
-        List<MapPin> pins = List.of(
-            pin("Mumbai",       "59.6%", "50.7%"),
-            pin("Kolkata",      "61.4%", "49.8%"),
-            pin("Bangalore",    "60%",   "52.4%"),
-            pin("Bangladesh",   "61.7%", "48.3%"),
-            pin("Nepal",        "61%",   "46.9%"),
-            pin("Sri Lanka",    "60.8%", "56%"),
-            pin("Singapore",    "65%",   "61.6%"),
-            pin("Malaysia",     "64.8%", "58.5%"),
-            pin("Indonesia",    "68%",   "61.4%"),
-            pin("Vietnam",      "65.7%", "52.5%"),
-            pin("Myanmar",      "64%",   "50%"),
-            pin("Thailand",     "64.6%", "52.5%"),
-            pin("UAE",          "56%",   "47.6%"),
-            pin("Qatar",        "55.5%", "47.2%"),
-            pin("Kuwait",       "54.8%", "44.1%"),
-            pin("KSA",          "54.5%", "47%"),
-            pin("Oman",         "56%",   "50.5%"),
-            pin("Bahrain",      "55%",   "45.5%"),
-            pin("Egypt",        "51.5%", "45%"),
-            pin("Tunisia",      "47.8%", "41.6%"),
-            pin("Morocco",      "45.2%", "42%"),
-            pin("Sudan",        "51.8%", "49%"),
-            pin("Kenya",        "54.7%", "57.8%"),
-            pin("Uganda",       "54%",   "57.4%"),
-            pin("Ghana",        "46.8%", "56.7%"),
-            pin("Ethiopia",     "52.8%", "51%"),
-            pin("Nigeria",      "47.6%", "56.8%"),
-            pin("South Africa", "50.5%", "78%"),
-            pin("Greece",       "50.4%", "38.7%"),
-            pin("Turkey",       "51.3%", "38.3%"),
-            pin("UK",           "45.6%", "28%"),
-            pin("Canada",       "24.5%", "24%"),
-            pin("Poland",       "48.8%", "28.9%"),
-            pin("Russia",       "67%",   "23%")
+    private void seedMapLocations() {
+        List<MapLocation> locations = List.of(
+            // South Asia — offices
+            loc("Mumbai", "India", 19.0760, 72.8777, "South Asia", "office", 1),
+            loc("Kolkata", "India", 22.5726, 88.3639, "South Asia", "office", 2),
+            loc("Bangalore", "India", 12.9716, 77.5946, "South Asia", "office", 3),
+            loc("Kathmandu", "Nepal", 27.7172, 85.3240, "South Asia", "office", 4),
+            loc("Dhaka", "Bangladesh", 23.8103, 90.4125, "South Asia", "local-recruitment", 5),
+            loc("Colombo", "Sri Lanka", 6.9271, 79.8612, "South Asia", "local-recruitment", 6),
+
+            // Southeast Asia
+            loc("Singapore", "Singapore", 1.3521, 103.8198, "Southeast Asia", "office", 7),
+            loc("Kuala Lumpur", "Malaysia", 3.1390, 101.6869, "Southeast Asia", "local-recruitment", 8),
+            loc("Jakarta", "Indonesia", -6.2088, 106.8456, "Southeast Asia", "local-recruitment", 9),
+            loc("Ho Chi Minh City", "Vietnam", 10.8231, 106.6297, "Southeast Asia", "local-recruitment", 10),
+            loc("Yangon", "Myanmar", 16.8661, 96.1951, "Southeast Asia", "recruitment-associate", 11),
+            loc("Bangkok", "Thailand", 13.7563, 100.5018, "Southeast Asia", "local-recruitment", 12),
+
+            // Middle East
+            loc("Dubai", "UAE", 25.2048, 55.2708, "Middle East", "office", 13),
+            loc("Doha", "Qatar", 25.2854, 51.5310, "Middle East", "office", 14),
+            loc("Kuwait City", "Kuwait", 29.3759, 47.9774, "Middle East", "recruitment-associate", 15),
+            loc("Riyadh", "Saudi Arabia", 24.7136, 46.6753, "Middle East", "local-recruitment", 16),
+            loc("Muscat", "Oman", 23.5880, 58.3829, "Middle East", "recruitment-associate", 17),
+            loc("Manama", "Bahrain", 26.2285, 50.5860, "Middle East", "recruitment-associate", 18),
+
+            // Africa
+            loc("Cairo", "Egypt", 30.0444, 31.2357, "Africa", "local-recruitment", 19),
+            loc("Tunis", "Tunisia", 36.8065, 10.1815, "Africa", "recruitment-associate", 20),
+            loc("Casablanca", "Morocco", 33.5731, -7.5898, "Africa", "recruitment-associate", 21),
+            loc("Nairobi", "Kenya", -1.2921, 36.8219, "Africa", "local-recruitment", 22),
+            loc("Kampala", "Uganda", 0.3476, 32.5825, "Africa", "recruitment-associate", 23),
+            loc("Accra", "Ghana", 5.6037, -0.1870, "Africa", "local-recruitment", 24),
+            loc("Addis Ababa", "Ethiopia", 9.0320, 38.7469, "Africa", "local-recruitment", 25),
+            loc("Lagos", "Nigeria", 6.5244, 3.3792, "Africa", "local-recruitment", 26),
+            loc("Johannesburg", "South Africa", -26.2041, 28.0473, "Africa", "office", 27),
+
+            // Europe
+            loc("Athens", "Greece", 37.9838, 23.7275, "Europe", "recruitment-associate", 28),
+            loc("Istanbul", "Turkey", 41.0082, 28.9784, "Europe", "local-recruitment", 29),
+            loc("London", "United Kingdom", 51.5074, -0.1278, "Europe", "office", 30),
+            loc("Warsaw", "Poland", 52.2297, 21.0122, "Europe", "recruitment-associate", 31),
+
+            // North America
+            loc("Toronto", "Canada", 43.6532, -79.3832, "North America", "office", 32)
         );
-        mapPinRepo.saveAll(pins);
-        System.out.println("✅ Map pins seeded: " + pins.size() + " rows");
+        mapLocationRepo.saveAll(locations);
+        System.out.println("✅ Map locations seeded: " + locations.size() + " rows");
     }
 
-    // ══════════════════════════════════════════════════════
-    // LIST ITEMS — all bullet points
-    // ══════════════════════════════════════════════════════
     private void seedListItems() {
 
         // ── ABOUT — ESG Ethical Recruitment ───────────────
@@ -961,12 +967,18 @@ public class DataInitializer implements CommandLineRunner {
         return s;
     }
 
-    private MapPin pin(String label, String left, String top) {
-        MapPin p = new MapPin();
-        p.setLabel(label);
-        p.setLeftPercent(left);
-        p.setTopPercent(top);
-        return p;
+    private MapLocation loc(String name, String country, double lat, double lng,
+                            String region, String kind, int order) {
+        MapLocation m = new MapLocation();
+        m.setName(name);
+        m.setCountry(country);
+        m.setLatitude(lat);
+        m.setLongitude(lng);
+        m.setRegion(region);
+        m.setKind(kind);
+        m.setIsActive(true);
+        m.setDisplayOrder(order);
+        return m;
     }
 
     private void saveList(String pageKey, String sectionKey,

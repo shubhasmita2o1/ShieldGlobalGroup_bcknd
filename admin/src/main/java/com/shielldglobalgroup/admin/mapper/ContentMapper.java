@@ -109,4 +109,40 @@ public class ContentMapper {
     public List<ContentListItemDTO> toContentListItemDTOList(List<ContentListItem> entities) {
         return entities.stream().map(this::toDTO).collect(Collectors.toList());
     }
+
+    public MapLocationDTO toDTO(MapLocation entity) {
+        return new MapLocationDTO(
+            entity.getId(),
+            entity.getName(),
+            entity.getCountry(),
+            entity.getLatitude(),
+            entity.getLongitude(),
+            entity.getRegion(),
+            entity.getKind(),
+            entity.getIsActive(),
+            entity.getDisplayOrder(),
+            entity.getCreatedAt(),
+            entity.getUpdatedAt()
+        );
+    }
+
+    public MapLocation toEntity(MapLocationDTO dto) {
+        MapLocation entity = new MapLocation();
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
+        }
+        entity.setName(dto.getName());
+        entity.setCountry(dto.getCountry());
+        entity.setLatitude(dto.getLatitude());
+        entity.setLongitude(dto.getLongitude());
+        entity.setRegion(dto.getRegion());
+        entity.setKind(dto.getKind());
+        entity.setIsActive(dto.getIsActive());
+        entity.setDisplayOrder(dto.getDisplayOrder());
+        return entity;
+    }
+
+    public List<MapLocationDTO> toMapLocationDTOList(List<MapLocation> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
 }
