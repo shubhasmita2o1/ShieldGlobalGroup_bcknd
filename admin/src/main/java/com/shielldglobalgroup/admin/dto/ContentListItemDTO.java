@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentListItemDTO {
+    private Long id;
     private String pageKey;
     private String sectionKey;
     private String listType;
     private Integer orderIndex;
     private String itemText;
-    // NO id — frontend doesn't need it
 }
