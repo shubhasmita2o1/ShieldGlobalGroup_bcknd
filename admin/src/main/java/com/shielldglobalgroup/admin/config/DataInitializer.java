@@ -8,6 +8,16 @@ import com.shielldglobalgroup.admin.repository.ContentBlockRepository;
 import com.shielldglobalgroup.admin.repository.ContentListItemRepository;
 import com.shielldglobalgroup.admin.repository.HeroSlideRepository;
 import com.shielldglobalgroup.admin.repository.MapLocationRepository;
+import com.shielldglobalgroup.admin.repository.TestimonialRepository;
+import com.shielldglobalgroup.admin.repository.PartnerRepository;
+import com.shielldglobalgroup.admin.repository.JourneyMilestoneRepository;
+import com.shielldglobalgroup.admin.repository.CompanyRepository;
+import com.shielldglobalgroup.admin.repository.AchievementRepository;
+import com.shielldglobalgroup.admin.entity.Testimonial;
+import com.shielldglobalgroup.admin.entity.Partner;
+import com.shielldglobalgroup.admin.entity.JourneyMilestone;
+import com.shielldglobalgroup.admin.entity.Company;
+import com.shielldglobalgroup.admin.entity.Achievement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,6 +32,11 @@ public class DataInitializer implements CommandLineRunner {
     private final ContentListItemRepository listRepo;
     private final HeroSlideRepository heroRepo;
     private final MapLocationRepository mapLocationRepo;
+    private final JourneyMilestoneRepository journeyRepo;
+    private final AchievementRepository achievementRepo;
+    private final TestimonialRepository testimonialRepo;
+    private final PartnerRepository partnerRepo;
+    private final CompanyRepository companyRepo;
 
     @Override
     public void run(String... args) {
@@ -29,6 +44,11 @@ public class DataInitializer implements CommandLineRunner {
         if (listRepo.count() == 0) seedListItems();
         if (heroRepo.count() == 0) seedHeroSlides();
         if (mapLocationRepo.count() == 0) seedMapLocations();
+        if (journeyRepo.count() == 0) seedJourney();
+        if (achievementRepo.count() == 0) seedAchievements();
+        if (testimonialRepo.count() == 0) seedTestimonials();
+        if (partnerRepo.count() == 0) seedPartners();
+        if (companyRepo.count() == 0) seedCompanies();
         System.out.println("✅ Seed data loaded successfully");
     }
 
@@ -939,6 +959,183 @@ public class DataInitializer implements CommandLineRunner {
         ));
 
         System.out.println("✅ List items seeded");
+    }
+
+
+    // ══════════════════════════════════════════════════════
+    // PHASE 1.5 — Journey / Achievements / Testimonials / Partners / Companies
+    // ══════════════════════════════════════════════════════
+    private void seedJourney() {
+        List<JourneyMilestone> items = List.of(
+            milestone("2009", "01", "Vijay Infotech", "ICA Vizag",
+                "Started as Vijay Infotech under ICA Vizag, laying the foundation for technology-led training and staffing services in coastal Andhra Pradesh.",
+                "Training, Staffing & Recruitment", null, 1),
+            milestone("2012", "02", "Regional Expansion", "Andhra Pradesh & Telangana",
+                "Expanded training and recruitment footprint across the region, building employer relationships and a dependable candidate pipeline.",
+                "Growth", null, 2),
+            milestone("2016", "03", "Shield Global Brand", "HR Solutions",
+                "Rebranded and scaled as Shield Global HR Solutions, delivering structured overseas and domestic manpower solutions with compliance at the core.",
+                "Brand Launch", "New", 3),
+            milestone("2019", "04", "Multi-Vertical Presence", "HR · Tech · Media",
+                "Grew into multi-vertical operations spanning manpower, industrial staffing, technology services, and media production support.",
+                "Diversification", null, 4),
+            milestone("2022", "05", "International Network", "Asia · Middle East · Africa",
+                "Strengthened recruitment corridors across South Asia, Southeast Asia, the Middle East, and Africa with associate partners on the ground.",
+                "Global Network", null, 5),
+            milestone("2024", "06", "Digital Transformation", "Process & Platform",
+                "Invested in digital workflows, candidate tracking, and client reporting to improve speed, transparency, and service quality.",
+                "Technology", null, 6),
+            milestone("2026", "07", "Shield Global Group", "Unified Group Launch",
+                "Formalised Shield Global Group as a unified platform connecting talent, technology, and entertainment across markets.",
+                "Group Launch", "New", 7)
+        );
+        journeyRepo.saveAll(items);
+        System.out.println("✅ Journey milestones seeded: " + items.size());
+    }
+
+    private void seedAchievements() {
+        List<Achievement> items = List.of(
+            achievement("Years of experience", 18L, "+", "Proven delivery across cycles", "award", 1),
+            achievement("Mandates delivered", 12000L, "+", "Domestic and overseas placements", "users", 2),
+            achievement("Countries served", 31L, "", "Active recruitment corridors", "globe", 3),
+            achievement("Clients & partners", 350L, "+", "Long-term employer relationships", "handshake", 4),
+            achievement("Industries covered", 12L, "", "From manufacturing to services", "industry", 5),
+            achievement("Business verticals", 4L, "", "HR, Tech, Media, Workforce", "layers", 6)
+        );
+        achievementRepo.saveAll(items);
+        System.out.println("✅ Achievements seeded: " + items.size());
+    }
+
+    private void seedTestimonials() {
+        List<Testimonial> items = List.of(
+            testimonial("Rajesh Kumar", "HR Director", "Gulf Manufacturing Co.",
+                "Shield Global consistently delivers screened candidates who fit our technical and cultural requirements. Their compliance discipline is outstanding.",
+                null, 5, 1),
+            testimonial("Aisha Rahman", "Talent Acquisition Lead", "Horizon Hospitality",
+                "We rely on Shield for multi-country hiring. Communication is clear, timelines are realistic, and replacements are handled professionally.",
+                null, 5, 2),
+            testimonial("Michael Chen", "Operations Manager", "Pacific Logistics",
+                "From visa documentation support to onboarding coordination, the team removes friction from cross-border recruitment.",
+                null, 4, 3),
+            testimonial("Priya Nair", "Founder", "Nexa Retail Group",
+                "Their domestic staffing vertical helped us scale store teams quickly without compromising quality or compliance.",
+                null, 5, 4),
+            testimonial("Omar Al-Farsi", "Project Head", "Desert Energy Partners",
+                "Reliable manpower supply for project peaks. Shield understands Middle East labour regulations and employer expectations.",
+                null, 5, 5)
+        );
+        testimonialRepo.saveAll(items);
+        System.out.println("✅ Testimonials seeded: " + items.size());
+    }
+
+    private void seedPartners() {
+        List<Partner> items = List.of(
+            partner("Apex Industrial Group", null, null, "client", 1),
+            partner("Horizon Hospitality", null, null, "client", 2),
+            partner("Pacific Logistics", null, null, "client", 3),
+            partner("Nexa Retail", null, null, "client", 4),
+            partner("Desert Energy Partners", null, null, "client", 5),
+            partner("Global Visa Associates", null, null, "associate", 6),
+            partner("SkillBridge Academy", null, null, "associate", 7),
+            partner("CloudForge Systems", null, null, "technology", 8)
+        );
+        partnerRepo.saveAll(items);
+        System.out.println("✅ Partners seeded: " + items.size());
+    }
+
+    private void seedCompanies() {
+        List<Company> items = List.of(
+            company("Shield Global HR Solutions", "shield-global-hr",
+                "Overseas and domestic manpower recruitment with compliance-first delivery.",
+                "Shield Global HR Solutions specialises in sourcing, screening, and deploying skilled and semi-skilled talent across Asia, the Middle East, Africa, and Europe.",
+                null, "India", null, null, 1),
+            company("InfiCorp Technology", "inficorp-technology",
+                "Industrial software, testing, and digital solutions for enterprises.",
+                "InfiCorp Technology delivers industrial automation software, application testing, and technology services that support modern operations.",
+                null, "India", null, null, 2),
+            company("Cineglare Entertainment", "cineglare-entertainment",
+                "Film, events, and brand media production.",
+                "Cineglare Entertainment produces corporate films, promotional content, live events, and brand storytelling for organisations and institutions.",
+                null, "India", null, null, 3),
+            company("Shield Workforce", "shield-workforce",
+                "Flexible staffing and workforce management solutions.",
+                "Shield Workforce provides contract staffing, payroll support, and workforce management for organisations that need scalable talent on demand.",
+                null, "India", null, null, 4),
+            company("Shield Global Management", "shield-global-management-dubai",
+                "Regional coordination and client services from Dubai.",
+                "Shield Global Management supports regional client engagement, coordination, and service delivery across Middle East markets from Dubai.",
+                null, "Dubai, UAE", null, null, 5)
+        );
+        companyRepo.saveAll(items);
+        System.out.println("✅ Companies seeded: " + items.size());
+    }
+
+    private JourneyMilestone milestone(String year, String indexLabel, String name, String subtitle,
+                                       String description, String tag, String flag, int order) {
+        JourneyMilestone m = new JourneyMilestone();
+        m.setYear(year);
+        m.setIndexLabel(indexLabel);
+        m.setName(name);
+        m.setSubtitle(subtitle);
+        m.setDescription(description);
+        m.setTag(tag);
+        m.setFlag(flag);
+        m.setIsActive(true);
+        m.setDisplayOrder(order);
+        return m;
+    }
+
+    private Achievement achievement(String label, Long value, String suffix, String detail, String iconKey, int order) {
+        Achievement a = new Achievement();
+        a.setLabel(label);
+        a.setValue(value);
+        a.setSuffix(suffix);
+        a.setDetail(detail);
+        a.setIconKey(iconKey);
+        a.setIsActive(true);
+        a.setDisplayOrder(order);
+        return a;
+    }
+
+    private Testimonial testimonial(String name, String designation, String company,
+                                    String message, String photoUrl, Integer rating, int order) {
+        Testimonial t = new Testimonial();
+        t.setName(name);
+        t.setDesignation(designation);
+        t.setCompany(company);
+        t.setMessage(message);
+        t.setPhotoUrl(photoUrl);
+        t.setRating(rating);
+        t.setIsActive(true);
+        t.setDisplayOrder(order);
+        return t;
+    }
+
+    private Partner partner(String name, String logoUrl, String websiteUrl, String category, int order) {
+        Partner p = new Partner();
+        p.setName(name);
+        p.setLogoUrl(logoUrl);
+        p.setWebsiteUrl(websiteUrl);
+        p.setCategory(category);
+        p.setIsActive(true);
+        p.setDisplayOrder(order);
+        return p;
+    }
+
+    private Company company(String name, String slug, String shortDescription, String description,
+                            String websiteUrl, String location, String email, String phone, int order) {
+        Company c = new Company();
+        c.setName(name);
+        c.setSlug(slug);
+        c.setShortDescription(shortDescription);
+        c.setDescription(description);
+        c.setWebsiteUrl(websiteUrl);
+        c.setLocation(location);
+        c.setEmail(email);
+        c.setPhone(phone);
+        c.setIsActive(true);
+        c.setDisplayOrder(order);
+        return c;
     }
 
     // ══════════════════════════════════════════════════════

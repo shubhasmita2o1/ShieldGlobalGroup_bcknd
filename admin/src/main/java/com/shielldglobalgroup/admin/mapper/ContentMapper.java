@@ -145,4 +145,139 @@ public class ContentMapper {
     public List<MapLocationDTO> toMapLocationDTOList(List<MapLocation> entities) {
         return entities.stream().map(this::toDTO).collect(Collectors.toList());
     }
+
+    // ── Phase 1.5 modules ─────────────────────────────────────────────────
+
+    public JourneyMilestoneDTO toDTO(JourneyMilestone entity) {
+        return new JourneyMilestoneDTO(
+            entity.getId(), entity.getYear(), entity.getIndexLabel(), entity.getName(),
+            entity.getSubtitle(), entity.getDescription(), entity.getTag(), entity.getFlag(),
+            entity.getIsActive(), entity.getDisplayOrder(), entity.getCreatedAt(), entity.getUpdatedAt()
+        );
+    }
+
+    public JourneyMilestone toEntity(JourneyMilestoneDTO dto) {
+        JourneyMilestone e = new JourneyMilestone();
+        if (dto.getId() != null) e.setId(dto.getId());
+        e.setYear(dto.getYear());
+        e.setIndexLabel(dto.getIndexLabel());
+        e.setName(dto.getName());
+        e.setSubtitle(dto.getSubtitle());
+        e.setDescription(dto.getDescription());
+        e.setTag(dto.getTag());
+        e.setFlag(dto.getFlag());
+        e.setIsActive(dto.getIsActive());
+        e.setDisplayOrder(dto.getDisplayOrder());
+        return e;
+    }
+
+    public List<JourneyMilestoneDTO> toJourneyMilestoneDTOList(List<JourneyMilestone> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public AchievementDTO toDTO(Achievement entity) {
+        return new AchievementDTO(
+            entity.getId(), entity.getLabel(), entity.getValue(), entity.getSuffix(),
+            entity.getDetail(), entity.getIconKey(), entity.getIsActive(),
+            entity.getDisplayOrder(), entity.getCreatedAt(), entity.getUpdatedAt()
+        );
+    }
+
+    public Achievement toEntity(AchievementDTO dto) {
+        Achievement e = new Achievement();
+        if (dto.getId() != null) e.setId(dto.getId());
+        e.setLabel(dto.getLabel());
+        e.setValue(dto.getValue());
+        e.setSuffix(dto.getSuffix());
+        e.setDetail(dto.getDetail());
+        e.setIconKey(dto.getIconKey());
+        e.setIsActive(dto.getIsActive());
+        e.setDisplayOrder(dto.getDisplayOrder());
+        return e;
+    }
+
+    public List<AchievementDTO> toAchievementDTOList(List<Achievement> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public TestimonialDTO toDTO(Testimonial entity) {
+        return new TestimonialDTO(
+            entity.getId(), entity.getName(), entity.getDesignation(), entity.getCompany(),
+            entity.getMessage(), entity.getPhotoUrl(), entity.getRating(), entity.getIsActive(),
+            entity.getDisplayOrder(), entity.getCreatedAt(), entity.getUpdatedAt()
+        );
+    }
+
+    public Testimonial toEntity(TestimonialDTO dto) {
+        Testimonial e = new Testimonial();
+        if (dto.getId() != null) e.setId(dto.getId());
+        e.setName(dto.getName());
+        e.setDesignation(dto.getDesignation());
+        e.setCompany(dto.getCompany());
+        e.setMessage(dto.getMessage());
+        e.setPhotoUrl(dto.getPhotoUrl());
+        e.setRating(dto.getRating());
+        e.setIsActive(dto.getIsActive());
+        e.setDisplayOrder(dto.getDisplayOrder());
+        return e;
+    }
+
+    public List<TestimonialDTO> toTestimonialDTOList(List<Testimonial> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public PartnerDTO toDTO(Partner entity) {
+        return new PartnerDTO(
+            entity.getId(), entity.getName(), entity.getLogoUrl(), entity.getWebsiteUrl(),
+            entity.getCategory(), entity.getIsActive(), entity.getDisplayOrder(),
+            entity.getCreatedAt(), entity.getUpdatedAt()
+        );
+    }
+
+    public Partner toEntity(PartnerDTO dto) {
+        Partner e = new Partner();
+        if (dto.getId() != null) e.setId(dto.getId());
+        e.setName(dto.getName());
+        e.setLogoUrl(dto.getLogoUrl());
+        e.setWebsiteUrl(dto.getWebsiteUrl());
+        e.setCategory(dto.getCategory());
+        e.setIsActive(dto.getIsActive());
+        e.setDisplayOrder(dto.getDisplayOrder());
+        return e;
+    }
+
+    public List<PartnerDTO> toPartnerDTOList(List<Partner> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public CompanyDTO toDTO(Company entity) {
+        return new CompanyDTO(
+            entity.getId(), entity.getName(), entity.getSlug(), entity.getLogoUrl(),
+            entity.getShortDescription(), entity.getDescription(), entity.getWebsiteUrl(),
+            entity.getLocation(), entity.getEmail(), entity.getPhone(), entity.getImageUrl(),
+            entity.getIsActive(), entity.getDisplayOrder(), entity.getCreatedAt(), entity.getUpdatedAt()
+        );
+    }
+
+    public Company toEntity(CompanyDTO dto) {
+        Company e = new Company();
+        if (dto.getId() != null) e.setId(dto.getId());
+        e.setName(dto.getName());
+        e.setSlug(dto.getSlug());
+        e.setLogoUrl(dto.getLogoUrl());
+        e.setShortDescription(dto.getShortDescription());
+        e.setDescription(dto.getDescription());
+        e.setWebsiteUrl(dto.getWebsiteUrl());
+        e.setLocation(dto.getLocation());
+        e.setEmail(dto.getEmail());
+        e.setPhone(dto.getPhone());
+        e.setImageUrl(dto.getImageUrl());
+        e.setIsActive(dto.getIsActive());
+        e.setDisplayOrder(dto.getDisplayOrder());
+        return e;
+    }
+
+    public List<CompanyDTO> toCompanyDTOList(List<Company> entities) {
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
 }

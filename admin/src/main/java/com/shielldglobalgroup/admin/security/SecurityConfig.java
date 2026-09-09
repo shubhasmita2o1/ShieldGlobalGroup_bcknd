@@ -48,6 +48,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/contact/**").permitAll()
                 .requestMatchers("/api/hero/**").permitAll()
                 .requestMatchers("/api/map/**").permitAll()
+                .requestMatchers("/api/timeline/**").permitAll()
+                .requestMatchers("/api/achievements/**").permitAll()
+                .requestMatchers("/api/testimonials/**").permitAll()
+                .requestMatchers("/api/partners/**").permitAll()
+                .requestMatchers("/api/companies/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/", "/index.html", "/static/**",
                         "/*.css", "/*.js", "/*.ico").permitAll()
