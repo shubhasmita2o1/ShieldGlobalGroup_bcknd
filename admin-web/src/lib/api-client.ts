@@ -1,15 +1,13 @@
 /**
  * Centralised API client.
  *
- * Every module in `src/api` goes through this client. Today the Spring Boot
- * backend does not exist yet, so requests fall back to local mock resolvers
- * (`mockResolver`). Once VITE_API_BASE_URL points at the real API and
- * `USE_MOCKS` is false, the exact same call signatures hit REST endpoints —
- * no UI component changes required.
+ * Every module in `src/api` goes through this client. When
+ * `VITE_USE_MOCKS=false` and `VITE_API_BASE_URL` points at the Spring Boot
+ * backend, the same call signatures hit real REST endpoints.
  */
 
 export const API_BASE_URL: string =
-  (import.meta.env["VITE_API_BASE_URL"] as string | undefined) ?? "/api/admin";
+  (import.meta.env["VITE_API_BASE_URL"] as string | undefined) ?? "http://localhost:8080";
 
 export const USE_MOCKS: boolean =
   (import.meta.env["VITE_USE_MOCKS"] as string | undefined) !== "false";
@@ -79,6 +77,35 @@ function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Unwrap Spring Boot `{ success, message, data }` envelope when present. */
+function unwrapResponse<T>(json: unknown): T {
+  if (
+    json !== null &&
+    typeof json === "object" &&
+    "success" in json &&
+    typeof (json as { success: unknown }).success === "boolean"
+  ) {
+    const envelope = json as { success: boolean; message?: string; data?: unknown };
+    if (!envelope.success) {
+      throw new ApiError(envelope.message || "Request failed", 400);
+    }
+    return envelope.data as T;
+  }
+  return json as T;
+}
+
+async function readErrorMessage(response: Response): Promise<string> {
+  try {
+    const json = (await response.json()) as { message?: string; success?: boolean };
+    if (json && typeof json.message === "string" && json.message.trim()) {
+      return json.message;
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return `Request failed with status ${response.status}`;
+}
+
 export async function apiRequest<TResponse, TBody = unknown>(
   path: string,
   options: RequestOptions<TBody> = {},
@@ -102,13 +129,17 @@ export async function apiRequest<TResponse, TBody = unknown>(
 
   if (response.status === 401) {
     unauthorizedHandler?.();
-    throw new ApiError("Session expired. Please sign in again.", 401);
+    const message = await readErrorMessage(response);
+    throw new ApiError(message || "Session expired. Please sign in again.", 401);
   }
 
   if (!response.ok) {
-    throw new ApiError(`Request failed with status ${response.status}`, response.status);
+    const message = await readErrorMessage(response);
+    throw new ApiError(message, response.status);
   }
 
   if (response.status === 204) return undefined as TResponse;
-  return (await response.json()) as TResponse;
+
+  const json = await response.json();
+  return unwrapResponse<TResponse>(json);
 }
